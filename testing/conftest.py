@@ -157,15 +157,14 @@ def anypython(request):
     return executable
 
 
-@pytest.fixture(scope="session")
-def group():
-    g = execnet.Group()
-    yield g
-    g.terminate(timeout=1)
-
-
 @pytest.fixture
-def gw(request, execmodel, group):
+def gw(request, execmodel):
+    group = request.cached_setup(
+        setup=execnet.Group,
+        teardown=lambda group: group.terminate(timeout=1),
+        extrakey="testgroup",
+        scope="session",
+    )
     try:
         return group[request.param]
     except KeyError:
