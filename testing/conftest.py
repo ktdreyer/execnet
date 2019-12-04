@@ -18,13 +18,13 @@ winpymap = {
 }
 
 
-@pytest.hookimpl(hookwrapper=True)
-def pytest_runtest_setup(item):
+def pytest_runtest_setup(item, __multicall__):
     if item.fspath.purebasename in ("test_group", "test_info"):
         getspecssh(item.config)  # will skip if no gx given
-    yield
+    res = __multicall__.execute()
     if "pypy" in item.keywords and not item.config.option.pypy:
         py.test.skip("pypy tests skipped, use --pypy to run them.")
+    return res
 
 
 @pytest.fixture
