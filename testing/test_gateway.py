@@ -539,13 +539,7 @@ class TestStringCoerce:
     [
         ("popen//python=python", ["python"]),
         ("popen//python=sudo -u test python", ["sudo", "-u", "test", "python"]),
-        pytest.param(
-            r"popen//python=/hans\ alt/bin/python",
-            ["/hans alt/bin/python"],
-            marks=pytest.mark.skipif(
-                sys.platform.startswith("win"), reason="invalid spec on Windows"
-            ),
-        ),
+        ('popen//python=/hans\ alt/bin/python', ['/hans alt/bin/python']),
         ('popen//python="/u/test me/python" -e', ["/u/test me/python", "-e"]),
     ],
 )
